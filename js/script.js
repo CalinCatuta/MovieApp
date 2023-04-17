@@ -5,26 +5,37 @@ const global = {
 
 
 
+// O functie care sa adauge clasa activ nav li in functie de pagina pe care suntem
+function addActiveClass(){
+    const links = document.querySelectorAll('.nav-link')
+    links.forEach(link => {
+        if(link.getAttribute('href') === global.currentPage){
+            link.classList.add('active')
+        }
+    })
+}
+
 // Create a function that load when page load.
 function init(){
     switch(global.currentPage){
         case '/':
-        case 'index.html':    
+        case '/index.html':    
             console.log('Home');
             break;
-        case 'shows.html':
+        case '/shows.html':
             console.log('Shows');
             break;
-        case 'movie-details.html':
+        case '/movie-details.html':
             console.log('Movie Details');
             break;  
-        case 'tv-details.html':
+        case '/tv-details.html':
             console.log('Tv Details');
             break;
-        case 'tv-details.html':
+        case '/search.html':
             console.log('Tv Details');
             break;               
     }
+    addActiveClass();
 }
 
 document.addEventListener('DOMContentLoaded', init)
