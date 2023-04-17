@@ -322,6 +322,8 @@ async function search(){
     alertElement.classList.add('alert', className)
     alertElement.append(document.createTextNode(message))
     document.querySelector('#alert').append(alertElement)
+
+    setTimeout(() => alertElement.remove(),2000)
   }
   
   // o functie care sa puna , dupa fiecare 3 numere.
