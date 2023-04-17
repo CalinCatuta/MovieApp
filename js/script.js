@@ -1,6 +1,12 @@
 // Cream un obiect in care punem o proprietate care primeste valoarea linkului din pagina
 const global = {
     currentPage: window.location.pathname,
+    search:{
+        term:'',
+        type:'',
+        page:1,
+        totalPages:1
+    },
     api: {
       apiKey: '8f28ca44b3ae15f44603c63265c7255e',
       apiUrl: 'https://api.themoviedb.org/3/'
@@ -23,6 +29,21 @@ const global = {
   
     return data;
   }
+
+//   Search movie and shows
+async function search(){
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString)
+
+    global.search.type = urlParams.get('type');
+    global.search.term = urlParams.get('search-term');
+
+    if(global.search.term !== '' && global.search.term !== null){
+        // todo - make request and display results
+    }else{
+        showAlert('Please enter a sarch term')
+    }
+}
   
   // Display popular movie
   async function displayPopularMovies() {
@@ -289,10 +310,18 @@ const global = {
     const links = document.querySelectorAll('.nav-link')
     links.forEach(link => {
       // aici in if(punem conditia ca href din <a></a> are aceasi valoare cu linkul de pe pagina actuala)
-      if (link.getAttribute('href') === pageLocation.currentPage) {
+      if (link.getAttribute('href') === global.currentPage) {
         link.classList.add('active')
       }
     })
+  }
+
+  //Show Alert
+  function showAlert(message, className){
+    const alertElement = document.createElement('div')
+    alertElement.classList.add('alert', className)
+    alertElement.append(document.createTextNode(message))
+    document.querySelector('#alert').append(alertElement)
   }
   
   // o functie care sa puna , dupa fiecare 3 numere.
@@ -303,7 +332,7 @@ const global = {
   // init app
   function init() {
     // In aceasta functie folosim switch se putea folosi si if. 
-    // in switch(oferim valoarea linkului de pe pagina pe care ne aflam) iar cu case punem variantele posibile si in functie de caz chemam functiile.
+    // in switch(punem obiectul cu key care detine valoarea url pagina)
     switch (global.currentPage) {
       case '/':
       case '/index.html':
@@ -320,7 +349,7 @@ const global = {
         displayShowDetails()
         break;
       case '/search.html':
-        console.log('search');
+        search()
         break;
     }
   
