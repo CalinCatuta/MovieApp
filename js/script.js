@@ -5,7 +5,8 @@ const global = {
         term:'',
         type:'',
         page:1,
-        totalPages:1
+        totalPages:1,
+        totalResults:0
     },
     api: {
       apiKey: '8f28ca44b3ae15f44603c63265c7255e',
@@ -56,13 +57,18 @@ async function search(){
 
     if(global.search.term !== '' && global.search.term !== null){
         // todo - make request and display results
-        const {results, total_pages, page} = await searchApiData()
+        const {results, total_pages, page, total_results} = await searchApiData()
+
+        global.search.page = page
+        global.search.totalPages = total_pages
+        global.search.totalResults = total_results
 
         if(results.length === 0){
             showAlert('No results found')
             return;
         }
         displaySearchResults(results);
+        showAlert('Found', 'success')
         document.querySelector('#search-term').value='';
     }else{
         showAlert('Please enter a sarch term')
@@ -77,7 +83,7 @@ function displaySearchResults(results){
         card.innerHTML = `
               <a href="${global.search.type}-details.html?id=${result.id}">
                 ${result.poster_path
-            ? `<img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" 
+            ? `<img src="https://image.tmdb.org/t/p/w500/${result.poster_path}" 
                     alt="${global.search.type === 'movie' ? result.title : result.name}"
                     class="card-img-top">`
             : `<img src="../images/no-image.jpg" 
@@ -92,11 +98,34 @@ function displaySearchResults(results){
                 </p>
               </div>
             `
-    
+        document.querySelector('#search-results-heading').innerHTML=`
+        <h2>${results.length} of ${global.search.totalResults}  for ${global.search.term}</h2>
+        `
         document.querySelector('#search-results').appendChild(card)
       })
+
+      displayPagination()
 }
   
+// Display pagination for search
+function displayPagination(){
+    const div = document.createElement('div')
+    div.classList.add('pagination')
+    div.innerHTML =`
+    <button class = "btn btn-primary" id="prev">Prev</button>
+    <button class = "btn btn-primary" id="next">Next</button>
+    <div class="page-counter">Page ${global.search.page} of ${global.search.totalPages}</div>
+    `
+    document.querySelector('#pagination').append(div)
+
+    // deseafle prev button if fPage
+    if(global.search.page === 1){
+        document.querySelector('#prev').disable = true
+    }
+    if(global.search.page === global.search.totalPages){
+        document.querySelector('#next').disable = true
+    }
+}
   // Display popular movie
   async function displayPopularMovies() {
     // aici facem Deconstruction pentru a trage din arrayul API-ul doar results. pentru ca exista in array o prioritate cu numele results.
