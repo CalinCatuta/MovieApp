@@ -30,6 +30,22 @@ const global = {
     return data;
   }
 
+//  Request to Search
+ async function searchApiData(){
+    const API_KEY = global.api.apiKey;
+    const API_URL = global.api.apiUrl;
+  
+    showSpinner()
+    // fetch(adaugam linkul API/si/variabila din functie si cealanta variabila cu api key) nu sa pus / pentru ca sa lasat in link /
+    const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`)
+  
+    const data = await response.json()
+  
+    hideSpinner()
+  
+    return data;
+ } 
+
 //   Search movie and shows
 async function search(){
     const queryString = window.location.search;
@@ -40,9 +56,45 @@ async function search(){
 
     if(global.search.term !== '' && global.search.term !== null){
         // todo - make request and display results
+        const {results, total_pages, page} = await searchApiData()
+
+        if(results.length === 0){
+            showAlert('No results found')
+            return;
+        }
+        displaySearchResults(results);
+        document.querySelector('#search-term').value='';
     }else{
         showAlert('Please enter a sarch term')
     }
+}
+
+function displaySearchResults(results){
+    results.forEach(result => {
+        const card = document.createElement('div')
+        card.classList.add('card')
+    
+        card.innerHTML = `
+              <a href="${global.search.type}-details.html?id=${result.id}">
+                ${result.poster_path
+            ? `<img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" 
+                    alt="${global.search.type === 'movie' ? result.title : result.name}"
+                    class="card-img-top">`
+            : `<img src="../images/no-image.jpg" 
+                    alt="${global.search.type === 'movie' ? result.title : result.name}
+                    class="card-img-top">`
+          }
+              </a>
+              <div class="card-body">
+                <h5 class="card-title">${global.search.type === 'movie' ? result.title : result.name}</h5>
+                <p class="card-text">
+                  <small class="text-muted">Resale: ${global.search.type === 'movie' ? result.release_date : result.first_air_date}</small>
+                </p>
+              </div>
+            `
+    
+        document.querySelector('#search-results').appendChild(card)
+      })
 }
   
   // Display popular movie
@@ -317,7 +369,7 @@ async function search(){
   }
 
   //Show Alert
-  function showAlert(message, className){
+  function showAlert(message, className = 'error'){
     const alertElement = document.createElement('div')
     alertElement.classList.add('alert', className)
     alertElement.append(document.createTextNode(message))
