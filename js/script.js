@@ -38,7 +38,7 @@ const global = {
   
     showSpinner()
     // fetch(adaugam linkul API/si/variabila din functie si cealanta variabila cu api key) nu sa pus / pentru ca sa lasat in link /
-    const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}`)
+    const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`)
   
     const data = await response.json()
   
@@ -76,6 +76,10 @@ async function search(){
 }
 
 function displaySearchResults(results){
+    // clear prev result
+    document.querySelector('#search-results').innerHTML = ''
+    document.querySelector('#search-results-heading').innerHTML = ''
+    document.querySelector('#pagination').innerHTML = ''
     results.forEach(result => {
         const card = document.createElement('div')
         card.classList.add('card')
@@ -120,11 +124,24 @@ function displayPagination(){
 
     // deseafle prev button if fPage
     if(global.search.page === 1){
-        document.querySelector('#prev').disable = true
+        document.querySelector('#prev').disabled = true
     }
     if(global.search.page === global.search.totalPages){
-        document.querySelector('#next').disable = true
+        document.querySelector('#next').disabled = true
     }
+
+    // next
+    document.querySelector('#next').addEventListener('click', async () =>{
+        global.search.page++
+        const {results, total_pages} = await searchApiData()
+        displaySearchResults(results)
+    })
+    // prev
+    document.querySelector('#prev').addEventListener('click', async () =>{
+        global.search.page--
+        const {results, total_pages} = await searchApiData()
+        displaySearchResults(results)
+    })
 }
   // Display popular movie
   async function displayPopularMovies() {
