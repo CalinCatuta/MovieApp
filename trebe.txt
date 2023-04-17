@@ -24,9 +24,6 @@ https://image.tmdb.org/t/p/w500
             </p>
           </div>
 
-
-            <div class="details-top">
-  <div>
   ${
     movie.poster_path
       ? `<img
