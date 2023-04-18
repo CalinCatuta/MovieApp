@@ -68,10 +68,9 @@ async function search(){
             return;
         }
         displaySearchResults(results);
-        showAlert('Found', 'success')
         document.querySelector('#search-term').value='';
     }else{
-        showAlert('Please enter a sarch term')
+        showAlert('Please enter a Movie or Show name')
     }
 }
 
