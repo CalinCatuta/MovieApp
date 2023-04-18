@@ -122,7 +122,7 @@ ul {
 
 /* Card */
 .card {
-  background: #ffd012f6;
+  background: #ff7300;
   padding: 5px;
 }
 
@@ -138,7 +138,7 @@ ul {
 .card:hover {
   transform: scale(1.05);
   transition: all 0.5s ease-in-out;
-  background: #ff9100;
+  background: #ff5100;
 }
 
 /* Footer */
@@ -354,5 +354,5 @@ input[type='radio']:checked:after {
 }
 
 .error {
-  background: red;
+  background: rgb(255, 0, 0);
 }
