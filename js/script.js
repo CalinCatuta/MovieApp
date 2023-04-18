@@ -37,7 +37,7 @@ const global = {
     const API_URL = global.api.apiUrl;
   
     showSpinner()
-    // fetch(adaugam linkul API/si/variabila din functie si cealanta variabila cu api key) nu sa pus / pentru ca sa lasat in link /
+    
     const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`)
   
     const data = await response.json()
@@ -377,7 +377,6 @@ function displayPagination(){
   // Displat tv slider
   async function DisplayTvSlider() {
     const { results } = await fetchApiData('tv/airing_today')
-    console.log(results);
   
     results.forEach((show) => {
       const div = document.createElement('div')
