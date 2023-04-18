@@ -319,6 +319,13 @@ function displayPagination(){
         .map(company => `<span>${company.name}</span>`)
         .join(', ')}
       </div>
+      <br>
+      <h4>Production Creators</h4>
+      <div class="list-group">
+      ${show.created_by
+        .map(creator => `<span>${creator.name}</span>`)
+        .join(', ')}
+      </div>
     </div>
       `
     document.querySelector('#show-details').appendChild(div)
