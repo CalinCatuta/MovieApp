@@ -368,6 +368,29 @@ function displayPagination(){
     })
   
   }
+  // Displat tv slider
+  async function DisplayTvSlider() {
+    const { results } = await fetchApiData('tv/airing_today')
+    console.log(results);
+  
+    results.forEach((show) => {
+      const div = document.createElement('div')
+      div.classList.add('swiper-slide')
+  
+      div.innerHTML = `
+      <a href="tv-details.html?id=${show.id}">
+            <img src="https://image.tmdb.org/t/p/w500${show.poster_path}" alt="${show.name}">
+          </a>
+          <h4>
+            <i class="fas fa-star text-secondary"></i>${show.vote_average}
+          </h4>
+      `
+      
+      document.querySelector('.swiper-wrapper').appendChild(div)
+      initSwiper()
+    })
+  
+  }
   // Swiper setup.
   function initSwiper() {
     const swiper = new Swiper('.swiper', {
@@ -392,7 +415,7 @@ function displayPagination(){
       }
     })
   }
-  
+
   // Spinner
   
   function showSpinner() {
@@ -440,6 +463,7 @@ function displayPagination(){
         displayPopularMovies();
         break;
       case '/shows.html':
+        DisplayTvSlider();
         displayPopularShows();
         break;
       case '/movie-details.html':
