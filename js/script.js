@@ -37,7 +37,8 @@ const global = {
     const API_URL = global.api.apiUrl;
   
     showSpinner()
-    
+
+    // Vom trage din API doar datele care corespund cu valoriile primite de la search(acolo vom face rost de type&term&page)
     const response = await fetch(`${API_URL}search/${global.search.type}?api_key=${API_KEY}&language=en-US&query=${global.search.term}&page=${global.search.page}`)
   
     const data = await response.json()
@@ -49,14 +50,25 @@ const global = {
 
 //   Search movie and shows
 async function search(){
+
+  // query string inseamna ce e in url dupa ?.....
+    // in HTML form input avem name="search-term" si va aparea in url dupa submit si in url va aparea search-term=(textul pus in input)
+    // in HTML form input radio button avem name="type" va aparea in url dupa submit iar valoarea lui va fi value="(in functie de butonu apasat)"
+
     const queryString = window.location.search;
+
+    // cream un obiect pentru a putea trage datele din url.
+
     const urlParams = new URLSearchParams(queryString)
+
+    // Add the type and term to the global object.
+    // valorile vor fi oferite in object.object.key : in functie de valorile din url de dupa ?....
 
     global.search.type = urlParams.get('type');
     global.search.term = urlParams.get('search-term');
 
     if(global.search.term !== '' && global.search.term !== null){
-        // todo - make request and display results
+        
         const {results, total_pages, page, total_results} = await searchApiData()
 
         global.search.page = page
@@ -366,7 +378,7 @@ function displayPagination(){
             <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
           </a>
           <h4>
-            <i class="fas fa-star text-secondary"></i>${movie.vote_average}
+            <i class="fas fa-star text-secondary"></i>${movie.vote_average}/10
           </h4>
       `
       document.querySelector('.swiper-wrapper').appendChild(div)
@@ -387,7 +399,7 @@ function displayPagination(){
             <img src="https://image.tmdb.org/t/p/w500${show.poster_path}" alt="${show.name}">
           </a>
           <h4>
-            <i class="fas fa-star text-secondary"></i>${show.vote_average}
+            <i class="fas fa-star text-secondary"></i>${show.vote_average}/10
           </h4>
       `
       
